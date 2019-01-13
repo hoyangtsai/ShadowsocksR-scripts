@@ -1,1 +1,1 @@
-## ShadowsocksR auto setup scripts
+# ShadowsocksR auto setup scripts

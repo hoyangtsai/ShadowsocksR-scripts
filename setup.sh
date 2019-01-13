@@ -7,18 +7,39 @@ setupEnv(){
   git clone https://github.com/shadowsocksr-backup/shadowsocksr.git
   cd shadowsocksr/
   git checkout -b manyuser origin/manyuser
-  wget --no-check-certificate https://raw.githubusercontent.com/hoyangtsai/ShadowsocksR-scripts/master/user-config.json
-  wget --no-check-certificate https://raw.githubusercontent.com/hoyangtsai/ShadowsocksR-scripts/master/config.sh
-  chmod a+x config.sh
+  git clone https://github.com/hoyangtsai/ShadowsocksR-scripts.git
 }
 
-setupiptables(){
+editConfig() {
+  JQR=""
+  
+  echo "What's the password?"
+  read PASSWORD
+  if [ $PASSWORD ]; then
+    JQR=".password=\"$PASSWORD\""
+  fi
+
+  # echo "What's the server port?"
+  # read PORT
+  # if [ $PORT ]; then
+  #   JQR="$JQR | .server_port=$PORT"
+  # fi
+
+  cat user-config.json | jq "$JQR" \
+    > file.tmp.json && cp file.tmp.json user-config.json && rm file.tmp.json
+    
+  echo "Edit user-config.json done!!"
+}
+
+setupIPtables(){
   echo "Which port is enabled?"
   read PORT
   iptables -I INPUT -p tcp --dport $PORT -j ACCEPT
   iptables -I INPUT -p udp --dport $PORT -j ACCEPT
   /etc/rc.d/init.d/iptables save
   /etc/init.d/iptables restart
+
+  echo "Edit iptables done!!"
 }
 
 setupBBR(){
@@ -28,7 +49,8 @@ setupBBR(){
 }
 
 setupEnv
-setupiptables
+editConfig
+setupIPtables
 setupBBR
 
 echo "Setup completed!!"
