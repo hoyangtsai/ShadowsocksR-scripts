@@ -5,7 +5,7 @@ setupEnv(){
   yum install git jq -y
   cd ~/
   git clone https://github.com/shadowsocksr-backup/shadowsocksr.git
-  cd shadowsocksr/
+  cd ~/shadowsocksr
   git checkout -b manyuser origin/manyuser
   git clone https://github.com/hoyangtsai/shadowsocksr-scripts.git
 }
@@ -13,26 +13,23 @@ setupEnv(){
 editConfig() {
   JQR=""
   
-  echo "What's the password?"
-  read -p PASSWORD
+  read -p "Enter password: " PASSWORD
   if [ $PASSWORD ]; then
     JQR=".password=\"$PASSWORD\""
   fi
 
-  # echo "What's the server port?"
-  # read PORT
-  # if [ $PORT ]; then
-  #   JQR="$JQR | .server_port=$PORT"
-  # fi
+  read -p "Enter a port number (0 - 65535): " PORT
+  if [ $PORT ]; then
+    JQR="$JQR | .server_port=$PORT"
+  fi
 
-  cat shadowsocksr-scripts/user-config.json | jq "$JQR" > user-config.json
+  cat ~/shadowsocksr/shadowsocksr-scripts/user-config.json | jq "$JQR" > ~/shadowsocksr/user-config.json
     
   echo "Edit user-config.json done!!"
 }
 
 setupIPtables(){
-  echo "Which port is enabled?"
-  read -p PORT
+  read -p "Enter the port number enabled: " PORT
   iptables -I INPUT -p tcp --dport $PORT -j ACCEPT
   iptables -I INPUT -p udp --dport $PORT -j ACCEPT
   /etc/rc.d/init.d/iptables save
