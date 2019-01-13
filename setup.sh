@@ -7,14 +7,14 @@ setupEnv(){
   git clone https://github.com/shadowsocksr-backup/shadowsocksr.git
   cd shadowsocksr/
   git checkout -b manyuser origin/manyuser
-  git clone https://github.com/hoyangtsai/ShadowsocksR-scripts.git
+  git clone https://github.com/hoyangtsai/shadowsocksr-scripts.git
 }
 
 editConfig() {
   JQR=""
   
   echo "What's the password?"
-  read PASSWORD
+  read -p PASSWORD
   if [ $PASSWORD ]; then
     JQR=".password=\"$PASSWORD\""
   fi
@@ -25,15 +25,14 @@ editConfig() {
   #   JQR="$JQR | .server_port=$PORT"
   # fi
 
-  cat user-config.json | jq "$JQR" \
-    > file.tmp.json && cp file.tmp.json user-config.json && rm file.tmp.json
+  cat shadowsocksr-scripts/user-config.json | jq "$JQR" > user-config.json
     
   echo "Edit user-config.json done!!"
 }
 
 setupIPtables(){
   echo "Which port is enabled?"
-  read PORT
+  read -p PORT
   iptables -I INPUT -p tcp --dport $PORT -j ACCEPT
   iptables -I INPUT -p udp --dport $PORT -j ACCEPT
   /etc/rc.d/init.d/iptables save
