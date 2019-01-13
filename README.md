@@ -1,0 +1,1 @@
+## ShadowsocksR auto setup scripts
