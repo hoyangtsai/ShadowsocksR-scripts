@@ -7,7 +7,7 @@ setupEnv(){
   git clone https://github.com/shadowsocksr-backup/shadowsocksr.git
   cd ~/shadowsocksr
   git checkout -b manyuser origin/manyuser
-  echo "sudo su && cd ~/shadowsocksr/shadowsocks && python server.py -d start" >> /etc/rc.d/rc.local
+  echo "cd /root/shadowsocksr/shadowsocks && python server.py -d start" >> /etc/rc.d/rc.local
 }
 
 editConfig() {
@@ -20,10 +20,10 @@ editConfig() {
     JQR=".password=\"$PASSWORD\""
   fi
 
-  # read -p "Enter a port number (0 - 65535): " PORT
-  # if [ $PORT ]; then
-  #   JQR="$JQR | .server_port=$PORT"
-  # fi
+  read -p "Enter a port number (0 - 65535): " PORT
+  if [ $PORT ]; then
+    JQR="$JQR | .server_port=$PORT"
+  fi
 
   cat ~/shadowsocksr/shadowsocksr-scripts/user-config.json | jq "$JQR" > ~/shadowsocksr/user-config.json
     
