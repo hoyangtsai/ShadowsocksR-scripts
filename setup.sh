@@ -18,10 +18,10 @@ editConfig() {
     JQR=".password=\"$PASSWORD\""
   fi
 
-  read -p "Enter a port number (0 - 65535): " PORT
-  if [ $PORT ]; then
-    JQR="$JQR | .server_port=$PORT"
-  fi
+  # read -p "Enter a port number (0 - 65535): " PORT
+  # if [ $PORT ]; then
+  #   JQR="$JQR | .server_port=$PORT"
+  # fi
 
   cat ~/shadowsocksr/shadowsocksr-scripts/user-config.json | jq "$JQR" > ~/shadowsocksr/user-config.json
     
@@ -29,7 +29,8 @@ editConfig() {
 }
 
 setupIPtables(){
-  read -p "Enter the port number enabled: " PORT
+  # read -p "Enter the port number enabled: " PORT
+  PORT=16888
   iptables -I INPUT -p tcp --dport $PORT -j ACCEPT
   iptables -I INPUT -p udp --dport $PORT -j ACCEPT
   /etc/rc.d/init.d/iptables save
