@@ -7,10 +7,12 @@ setupEnv(){
   git clone https://github.com/shadowsocksr-backup/shadowsocksr.git
   cd ~/shadowsocksr
   git checkout -b manyuser origin/manyuser
-  git clone https://github.com/hoyangtsai/shadowsocksr-scripts.git
+  echo "sudo su && cd ~/shadowsocksr/shadowsocks && python server.py -d start" >> /etc/rc.d/rc.local
 }
 
 editConfig() {
+  git clone https://github.com/hoyangtsai/shadowsocksr-scripts.git
+
   JQR=""
   
   read -p "Enter password: " PASSWORD
